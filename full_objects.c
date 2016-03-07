@@ -1,4 +1,4 @@
-/** 
+/**
  * Copyright (C) 2016 Frank Yang <codebear4@gmail.com>
  *
  * This software may be modified and distributed under the terms
@@ -32,8 +32,8 @@ PHP_INI_END()
 /* }}} */
 
 ZEND_BEGIN_ARG_INFO_EX(register_handler_arginfo, 0, 0, 2)
-	ZEND_ARG_INFO(0, "basicType")
-	ZEND_ARG_INFO(0, "oopHandler")
+    ZEND_ARG_INFO(0, "basicType")
+    ZEND_ARG_INFO(0, "oopHandler")
 ZEND_END_ARG_INFO()
 
 
@@ -41,16 +41,16 @@ ZEND_END_ARG_INFO()
    Register a handler for basic type */
 PHP_FUNCTION(register_full_objects_handler)
 {
-	zend_string *type = NULL;
-	zend_class_entry *ce = NULL;
+    zend_string *type = NULL;
+    zend_class_entry *ce = NULL;
 
-	ZEND_PARSE_PARAMETERS_START(2, 2)
-		Z_PARAM_STR(type)
-		Z_PARAM_CLASS_EX(ce, 1, 0)
-	ZEND_PARSE_PARAMETERS_END();
+    ZEND_PARSE_PARAMETERS_START(2, 2)
+        Z_PARAM_STR(type)
+        Z_PARAM_CLASS_EX(ce, 1, 0)
+    ZEND_PARSE_PARAMETERS_END();
 
-	RETURN_STR(ce->name);
-	// TODO: 
+    RETURN_STR(ce->name);
+    // TODO:
 }
 /* }}} */
 
@@ -59,7 +59,7 @@ PHP_FUNCTION(register_full_objects_handler)
  */
 static void php_full_objects_init_globals(zend_full_objects_globals *full_objects_globals)
 {
-	zend_hash_init(full_objects_globals->oop_handlers, 8, NULL, NULL, 0);
+    zend_hash_init(full_objects_globals->oop_handlers, 8, NULL, NULL, 0);
 }
 /* }}} */
 
@@ -67,10 +67,10 @@ static void php_full_objects_init_globals(zend_full_objects_globals *full_object
  */
 PHP_MINIT_FUNCTION(full_objects)
 {
-	/* If you have INI entries, uncomment these lines
-	REGISTER_INI_ENTRIES();
-	*/
-	return SUCCESS;
+    /* If you have INI entries, uncomment these lines
+    REGISTER_INI_ENTRIES();
+    */
+    return SUCCESS;
 }
 /* }}} */
 
@@ -78,10 +78,10 @@ PHP_MINIT_FUNCTION(full_objects)
  */
 PHP_MSHUTDOWN_FUNCTION(full_objects)
 {
-	/* uncomment this line if you have INI entries
-	UNREGISTER_INI_ENTRIES();
-	*/
-	return SUCCESS;
+    /* uncomment this line if you have INI entries
+    UNREGISTER_INI_ENTRIES();
+    */
+    return SUCCESS;
 }
 /* }}} */
 
@@ -91,9 +91,9 @@ PHP_MSHUTDOWN_FUNCTION(full_objects)
 PHP_RINIT_FUNCTION(full_objects)
 {
 #if defined(COMPILE_DL_FULL_OBJECTS) && defined(ZTS)
-	ZEND_TSRMLS_CACHE_UPDATE();
+    ZEND_TSRMLS_CACHE_UPDATE();
 #endif
-	return SUCCESS;
+    return SUCCESS;
 }
 /* }}} */
 
@@ -102,7 +102,7 @@ PHP_RINIT_FUNCTION(full_objects)
  */
 PHP_RSHUTDOWN_FUNCTION(full_objects)
 {
-	return SUCCESS;
+    return SUCCESS;
 }
 /* }}} */
 
@@ -110,13 +110,13 @@ PHP_RSHUTDOWN_FUNCTION(full_objects)
  */
 PHP_MINFO_FUNCTION(full_objects)
 {
-	php_info_print_table_start();
-	php_info_print_table_header(2, "full_objects support", "enabled");
-	php_info_print_table_end();
+    php_info_print_table_start();
+    php_info_print_table_header(2, "full_objects support", "enabled");
+    php_info_print_table_end();
 
-	/* Remove comments if you have entries in php.ini
-	DISPLAY_INI_ENTRIES();
-	*/
+    /* Remove comments if you have entries in php.ini
+    DISPLAY_INI_ENTRIES();
+    */
 }
 /* }}} */
 
@@ -125,24 +125,24 @@ PHP_MINFO_FUNCTION(full_objects)
  * Every user visible function must have an entry in full_objects_functions[].
  */
 const zend_function_entry full_objects_functions[] = {
-	PHP_FE(register_full_objects_handler,	register_handler_arginfo)
-	PHP_FE_END	/* Must be the last line in full_objects_functions[] */
+    PHP_FE(register_full_objects_handler,	register_handler_arginfo)
+    PHP_FE_END	/* Must be the last line in full_objects_functions[] */
 };
 /* }}} */
 
 /* {{{ full_objects_module_entry
  */
 zend_module_entry full_objects_module_entry = {
-	STANDARD_MODULE_HEADER,
-	"full_objects",
-	full_objects_functions,
-	PHP_MINIT(full_objects),
-	PHP_MSHUTDOWN(full_objects),
-	PHP_RINIT(full_objects),		/* Replace with NULL if there's nothing to do at request start */
-	PHP_RSHUTDOWN(full_objects),	/* Replace with NULL if there's nothing to do at request end */
-	PHP_MINFO(full_objects),
-	PHP_FULL_OBJECTS_VERSION,
-	STANDARD_MODULE_PROPERTIES
+    STANDARD_MODULE_HEADER,
+    "full_objects",
+    full_objects_functions,
+    PHP_MINIT(full_objects),
+    PHP_MSHUTDOWN(full_objects),
+    PHP_RINIT(full_objects),		/* Replace with NULL if there's nothing to do at request start */
+    PHP_RSHUTDOWN(full_objects),	/* Replace with NULL if there's nothing to do at request end */
+    PHP_MINFO(full_objects),
+    PHP_FULL_OBJECTS_VERSION,
+    STANDARD_MODULE_PROPERTIES
 };
 /* }}} */
 
@@ -153,11 +153,3 @@ ZEND_TSRMLS_CACHE_DEFINE();
 ZEND_GET_MODULE(full_objects)
 #endif
 
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- * vim600: noet sw=4 ts=4 fdm=marker
- * vim<600: noet sw=4 ts=4
- */

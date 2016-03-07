@@ -1,4 +1,4 @@
-/** 
+/**
  * Copyright (C) 2016 Frank Yang <codebear4@gmail.com>
  *
  * This software may be modified and distributed under the terms
@@ -28,7 +28,7 @@ extern zend_module_entry full_objects_module_entry;
 #endif
 
 ZEND_BEGIN_MODULE_GLOBALS(full_objects)
-	zend_array *oop_handlers;
+    zend_array *oop_handlers;
 ZEND_END_MODULE_GLOBALS(full_objects)
 
 #define FULL_OBJECTS_G(v) ZEND_MODULE_GLOBALS_ACCESSOR(full_objects, v)
@@ -39,12 +39,3 @@ ZEND_TSRMLS_CACHE_EXTERN();
 
 #endif	/* PHP_FULL_OBJECTS_H */
 
-
-/*
- * Local variables:
- * tab-width: 4
- * c-basic-offset: 4
- * End:
- * vim600: noet sw=4 ts=4 fdm=marker
- * vim<600: noet sw=4 ts=4
- */
