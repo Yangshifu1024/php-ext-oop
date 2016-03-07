@@ -31,23 +31,26 @@ PHP_INI_END()
 */
 /* }}} */
 
+ZEND_BEGIN_ARG_INFO_EX(register_handler_arginfo, 0, 0, 2)
+	ZEND_ARG_INFO(0, "basicType")
+	ZEND_ARG_INFO(0, "oopHandler")
+ZEND_END_ARG_INFO()
 
-/* Every user-visible function in PHP should document itself in the source */
-/* {{{ proto string confirm_full_objects_compiled(string arg)
-   Return a string to confirm that the module is compiled in */
-PHP_FUNCTION(confirm_full_objects_compiled)
+
+/* {{{ proto void register_full_objects_handler(string $arg, class $ce)
+   Register a handler for basic type */
+PHP_FUNCTION(register_full_objects_handler)
 {
-	char *arg = NULL;
-	size_t arg_len, len;
-	zend_string *strg;
+	zend_string *type = NULL;
+	zend_class_entry *ce = NULL;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &arg, &arg_len) == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_START(2, 2)
+		Z_PARAM_STR(type)
+		Z_PARAM_CLASS_EX(ce, 1, 0)
+	ZEND_PARSE_PARAMETERS_END();
 
-	strg = strpprintf(0, "Congratulations! You have successfully modified ext/%.78s/config.m4. Module %.78s is now compiled into PHP.", "full_objects", arg);
-
-	RETURN_STR(strg);
+	RETURN_STR(ce->name);
+	// TODO: 
 }
 /* }}} */
 
@@ -122,7 +125,7 @@ PHP_MINFO_FUNCTION(full_objects)
  * Every user visible function must have an entry in full_objects_functions[].
  */
 const zend_function_entry full_objects_functions[] = {
-	PHP_FE(confirm_full_objects_compiled,	NULL)		/* For testing, remove later. */
+	PHP_FE(register_full_objects_handler,	register_handler_arginfo)
 	PHP_FE_END	/* Must be the last line in full_objects_functions[] */
 };
 /* }}} */
