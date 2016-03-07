@@ -16,9 +16,7 @@
 #include "ext/standard/info.h"
 #include "php_full_objects.h"
 
-/* If you declare any globals in php_full_objects.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(full_objects)
-*/
 
 /* True global resources - no need for thread safety here */
 static int le_full_objects;
@@ -33,9 +31,6 @@ PHP_INI_END()
 */
 /* }}} */
 
-/* Remove the following function when you have successfully modified config.m4
-   so that your module can be compiled into PHP, it exists only for testing
-   purposes. */
 
 /* Every user-visible function in PHP should document itself in the source */
 /* {{{ proto string confirm_full_objects_compiled(string arg)
@@ -55,22 +50,14 @@ PHP_FUNCTION(confirm_full_objects_compiled)
 	RETURN_STR(strg);
 }
 /* }}} */
-/* The previous line is meant for vim and emacs, so it can correctly fold and
-   unfold functions in source code. See the corresponding marks just before
-   function definition, where the functions purpose is also documented. Please
-   follow this convention for the convenience of others editing your code.
-*/
 
 
 /* {{{ php_full_objects_init_globals
  */
-/* Uncomment this function if you have INI entries
 static void php_full_objects_init_globals(zend_full_objects_globals *full_objects_globals)
 {
-	full_objects_globals->global_value = 0;
-	full_objects_globals->global_string = NULL;
+	zend_hash_init(full_objects_globals->oop_handlers, 8, NULL, NULL, 0);
 }
-*/
 /* }}} */
 
 /* {{{ PHP_MINIT_FUNCTION
