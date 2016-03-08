@@ -16,5 +16,13 @@ extern zend_class_entry *handler_string_ce;
 
 FULLOBJECTS_MODULE_STARTUP_FUNCTION(handler_string);
 
+ZEND_BEGIN_ARG_INFO_EX(handler_string_toString_arginfo, 0, 0, 1)
+    ZEND_ARG_INFO(0, str)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(handler_string_toArray_arginfo, 0, 0, 1)
+    ZEND_ARG_INFO(0, str)
+ZEND_END_ARG_INFO()
+
 #endif
 

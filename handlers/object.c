@@ -28,8 +28,8 @@ PHP_METHOD(handler_object, toArray) {
 /* }}} */
 
 const zend_function_entry handler_object_ce_functions[] = {
-    PHP_ME(handler_object, toString, NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(handler_object, toArray, NULL, ZEND_ACC_PUBLIC)
+    PHP_ME(handler_object, toString, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    PHP_ME(handler_object, toArray, NULL, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_FE_END
 };
 
