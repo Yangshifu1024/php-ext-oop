@@ -15,10 +15,12 @@
 #include "php_ini.h"
 #include "ext/standard/info.h"
 #include "ext/standard/php_var.h"
+#include "ext/standard/php_string.h"
 
 #include "php_full_objects.h"
 #include "register.h"
 #include "handlers/object.h"
+#include "handlers/string.h"
 
 ZEND_DECLARE_MODULE_GLOBALS(full_objects)
 
@@ -32,6 +34,7 @@ PHP_INI_BEGIN()
 PHP_INI_END()
 /* }}} */
 
+/** see http://lxr.php.net/xref/PHP_7_0/Zend/zend_vm_def.h#2892 */
 static int full_objects_method_call_handler(zend_execute_data *execute_data)
 {
     const zend_op *opline = execute_data->opline;
@@ -39,15 +42,38 @@ static int full_objects_method_call_handler(zend_execute_data *execute_data)
     zval *obj = NULL, *method = NULL;
     zend_class_entry *ce = NULL;
     zend_function *fbc = NULL;
+    zend_execute_data *call = NULL;
 
     obj = zend_get_zval_ptr(opline->op1_type, &opline->op1, execute_data, &free_op1, BP_VAR_R);
     method = zend_get_zval_ptr(opline->op2_type, &opline->op2, execute_data, &free_op2, BP_VAR_R);
 
-    php_var_dump(obj, 2);
-    php_var_dump(method, 2);
+    if (Z_TYPE_P(obj) == IS_STRING) {
+        /* php_var_dump(obj, 2); */
+        /* php_var_dump(method, 2); */
+        ce = FULL_OBJECTS_G(oop_handlers)[Z_TYPE_P(obj)];
+
+        if (!ce) {
+            return ZEND_USER_OPCODE_DISPATCH;
+        }
+
+        fbc = zend_std_get_static_method(ce, Z_STR_P(method), NULL);
+        if (UNEXPECTED(fbc == NULL)) {
+           php_error(E_ERROR, "Call to undefined method %s::%s()", ZSTR_VAL(ce->name), Z_STRVAL_P(method));
+        }
+
+        call = zend_vm_stack_push_call_frame(ZEND_CALL_NESTED_FUNCTION, fbc, opline->extended_value, ce, NULL);
+        call->prev_execute_data = EX(call);
+        EX(call) = call;
+
+        FREE_OP(free_op2);
+        FREE_OP_IF_VAR(free_op1);
+
+        execute_data->opline++;
+
+        return ZEND_USER_OPCODE_CONTINUE;
+    }
 
     return ZEND_USER_OPCODE_DISPATCH;
-    /* return ZEND_USER_OPCODE_CONTINUE; */
 }
 
 ZEND_BEGIN_ARG_INFO_EX(register_handler_arginfo, 0, 0, 2)
@@ -84,15 +110,13 @@ PHP_FUNCTION(register_full_objects_handler)
 /* {{{ PHP_GINIT_FUNCTION */
 PHP_GINIT_FUNCTION(full_objects) {
     full_objects_globals->allow_override = 0;
-    full_objects_globals->oop_handlers = (zend_array*) pemalloc(sizeof(zend_array), 1);
-    zend_hash_init(full_objects_globals->oop_handlers, 64, NULL, ZVAL_PTR_DTOR, 1);
+    memset(full_objects_globals->oop_handlers, 0, sizeof(zend_class_entry *) * MAX_HANDLERS);
 }
 /* }}} */
 
 /* {{{ PHP_GSHUTDOWN_FUNCTION */
 PHP_GSHUTDOWN_FUNCTION(full_objects) {
     full_objects_globals->allow_override = 0;
-    zend_hash_destroy(full_objects_globals->oop_handlers);
 }
 /* }}} */
 
@@ -102,7 +126,19 @@ PHP_MINIT_FUNCTION(full_objects)
 {
     REGISTER_INI_ENTRIES();
     FULLOBJECTS_MODULE_STARTUP(handler_object);
-    /* zend_set_user_opcode_handler(ZEND_INIT_METHOD_CALL, full_objects_method_call_handler); */
+    FULLOBJECTS_MODULE_STARTUP(handler_string);
+
+    zend_bool ret;
+    zend_string *basic_type = zend_string_init(ZEND_STRL("string"), 0);
+
+    register_handler(&ret, basic_type, handler_string_ce);
+
+    if (!ret) {
+        php_error(E_ERROR, "cant register handler!");
+        return FAILURE;
+    }
+
+    zend_set_user_opcode_handler(ZEND_INIT_METHOD_CALL, full_objects_method_call_handler);
     return SUCCESS;
 }
 /* }}} */

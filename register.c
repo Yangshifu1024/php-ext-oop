@@ -16,23 +16,46 @@
 #include "php_full_objects.h"
 #include "register.h"
 
+zend_ulong get_type_by_string(const char *type);
+
 void register_handler(zend_bool *ret, zend_string *type, zend_class_entry *ce)
 {
-    zend_bool is_exsit = 0;
+    zend_ulong origin_type = get_type_by_string(ZSTR_VAL(type));
 
-    is_exsit = zend_hash_exists(FULL_OBJECTS_G(oop_handlers), type);
-
-    if (is_exsit) {
+    if (FULL_OBJECTS_G(oop_handlers)[origin_type]) {
         if (!FULL_OBJECTS_G(allow_override)) {
-            php_error(E_ERROR, "Type %s has been registered, and it\'s not allow to override.", ZSTR_VAL(type));
             *ret = 0;
+            php_error(E_ERROR, "Type %s has been registered, and it\'s not allow to override.", ZSTR_VAL(type));
         }
     }
 
-    zval class;
-    ZVAL_CE(&class, ce);
-    zend_hash_update(FULL_OBJECTS_G(oop_handlers), type, &class);
+    FULL_OBJECTS_G(oop_handlers)[origin_type] = ce ;
+    if (origin_type == IS_TRUE) {
+        FULL_OBJECTS_G(oop_handlers)[IS_FALSE] = ce ;
+    }
     *ret = 1;
+}
+
+zend_ulong get_type_by_string(const char *type)
+{
+    if (!strcasecmp(type, "null")) {
+        return IS_NULL;
+    } else if (!strcasecmp(type, "bool")) {
+        return IS_TRUE;
+    } else if (!strcasecmp(type, "int")) {
+        return IS_LONG;
+    } else if (!strcasecmp(type, "float")) {
+        return IS_DOUBLE;
+    } else if (!strcasecmp(type, "string")) {
+        return IS_STRING;
+    } else if (!strcasecmp(type, "array")) {
+        return IS_ARRAY;
+    } else if (!strcasecmp(type, "resource")) {
+        return IS_RESOURCE;
+    } else {
+        zend_error(E_WARNING, "Invalid type \"%s\" specified", type);
+        return -1;
+    }
 }
 
 

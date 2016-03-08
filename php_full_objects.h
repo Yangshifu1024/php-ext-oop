@@ -27,13 +27,21 @@ extern zend_module_entry full_objects_module_entry;
 
 #define FULLOBJECTS_MODULE_STARTUP(module) ZEND_MODULE_STARTUP_N(full_objects_##module)(INIT_FUNC_ARGS_PASSTHRU)
 #define FULLOBJECTS_MODULE_STARTUP_FUNCTION(module) ZEND_MINIT_FUNCTION(full_objects_##module)
+#define MAX_HANDLERS IS_REFERENCE
+
+/* Copy from http://lxr.php.net/xref/PHP_7_0/Zend/zend_execute.c#107 */
+# define FREE_OP(should_free) \
+    if (should_free) { \
+        zval_ptr_dtor_nogc(should_free); \
+    }
+# define FREE_OP_IF_VAR(should_free) FREE_OP(should_free)
 
 #ifdef ZTS
 #include "TSRM.h"
 #endif
 
 ZEND_BEGIN_MODULE_GLOBALS(full_objects)
-    zend_array *oop_handlers;
+    zend_class_entry *oop_handlers[MAX_HANDLERS];
     zend_bool allow_override;
 ZEND_END_MODULE_GLOBALS(full_objects)
 
