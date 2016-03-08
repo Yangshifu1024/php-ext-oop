@@ -40,5 +40,7 @@ ZEND_END_MODULE_GLOBALS(full_objects)
 ZEND_TSRMLS_CACHE_EXTERN();
 #endif
 
+extern ZEND_DECLARE_MODULE_GLOBALS(full_objects);
+
 #endif	/* PHP_FULL_OBJECTS_H */
 

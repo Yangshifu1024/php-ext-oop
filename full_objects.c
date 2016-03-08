@@ -14,7 +14,9 @@
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
+
 #include "php_full_objects.h"
+#include "register.h"
 
 ZEND_DECLARE_MODULE_GLOBALS(full_objects)
 
@@ -46,18 +48,31 @@ PHP_FUNCTION(register_full_objects_handler)
         Z_PARAM_CLASS_EX(ce, 1, 0)
     ZEND_PARSE_PARAMETERS_END();
 
-    RETURN_STR(ce->name);
-    // TODO:
+    zend_bool ret;
+
+    register_handler(&ret, type, ce);
+
+    if (ret) {
+        RETURN_STR(ce->name);
+    } else {
+        RETURN_NULL();
+    }
 }
 /* }}} */
 
 
-/* {{{ php_full_objects_init_globals
- */
-static void php_full_objects_init_globals(zend_full_objects_globals *full_objects_globals)
-{
-    zend_hash_init(full_objects_globals->oop_handlers, 8, NULL, NULL, 0);
+/* {{{ PHP_GINIT_FUNCTION */
+PHP_GINIT_FUNCTION(full_objects) {
     full_objects_globals->allow_override = 0;
+    full_objects_globals->oop_handlers = (zend_array*) pemalloc(sizeof(zend_array), 1);
+    zend_hash_init(full_objects_globals->oop_handlers, 64, NULL, ZVAL_PTR_DTOR, 1);
+}
+/* }}} */
+
+/* {{{ PHP_GSHUTDOWN_FUNCTION */
+PHP_GSHUTDOWN_FUNCTION(full_objects) {
+    full_objects_globals->allow_override = 0;
+    zend_hash_destroy(full_objects_globals->oop_handlers);
 }
 /* }}} */
 
@@ -134,7 +149,11 @@ zend_module_entry full_objects_module_entry = {
     PHP_RSHUTDOWN(full_objects),	/* Replace with NULL if there's nothing to do at request end */
     PHP_MINFO(full_objects),
     PHP_FULL_OBJECTS_VERSION,
-    STANDARD_MODULE_PROPERTIES
+    PHP_MODULE_GLOBALS(full_objects),
+    PHP_GINIT(full_objects),
+    PHP_GSHUTDOWN(full_objects),
+    NULL,
+    STANDARD_MODULE_PROPERTIES_EX
 };
 /* }}} */
 
