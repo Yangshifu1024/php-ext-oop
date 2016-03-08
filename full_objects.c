@@ -23,17 +23,14 @@ static int le_full_objects;
 
 /* {{{ PHP_INI
  */
-/* Remove comments and fill if you need to have entries in php.ini
 PHP_INI_BEGIN()
-    STD_PHP_INI_ENTRY("full_objects.global_value",      "42", PHP_INI_ALL, OnUpdateLong, global_value, zend_full_objects_globals, full_objects_globals)
-    STD_PHP_INI_ENTRY("full_objects.global_string", "foobar", PHP_INI_ALL, OnUpdateString, global_string, zend_full_objects_globals, full_objects_globals)
+    STD_PHP_INI_ENTRY("full_objects.allow_override",      "0", PHP_INI_ALL, OnUpdateBool, allow_override, zend_full_objects_globals, full_objects_globals)
 PHP_INI_END()
-*/
 /* }}} */
 
 ZEND_BEGIN_ARG_INFO_EX(register_handler_arginfo, 0, 0, 2)
-    ZEND_ARG_INFO(0, "basicType")
-    ZEND_ARG_INFO(0, "oopHandler")
+    ZEND_ARG_INFO(0, "type")
+    ZEND_ARG_INFO(0, "handler")
 ZEND_END_ARG_INFO()
 
 
@@ -60,6 +57,7 @@ PHP_FUNCTION(register_full_objects_handler)
 static void php_full_objects_init_globals(zend_full_objects_globals *full_objects_globals)
 {
     zend_hash_init(full_objects_globals->oop_handlers, 8, NULL, NULL, 0);
+    full_objects_globals->allow_override = 0;
 }
 /* }}} */
 
@@ -67,9 +65,7 @@ static void php_full_objects_init_globals(zend_full_objects_globals *full_object
  */
 PHP_MINIT_FUNCTION(full_objects)
 {
-    /* If you have INI entries, uncomment these lines
     REGISTER_INI_ENTRIES();
-    */
     return SUCCESS;
 }
 /* }}} */
@@ -78,9 +74,7 @@ PHP_MINIT_FUNCTION(full_objects)
  */
 PHP_MSHUTDOWN_FUNCTION(full_objects)
 {
-    /* uncomment this line if you have INI entries
     UNREGISTER_INI_ENTRIES();
-    */
     return SUCCESS;
 }
 /* }}} */
@@ -114,9 +108,7 @@ PHP_MINFO_FUNCTION(full_objects)
     php_info_print_table_header(2, "full_objects support", "enabled");
     php_info_print_table_end();
 
-    /* Remove comments if you have entries in php.ini
     DISPLAY_INI_ENTRIES();
-    */
 }
 /* }}} */
 

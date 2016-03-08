@@ -7,6 +7,8 @@
 
 /* $Id$ */
 
+#include "php.h"
+
 #ifndef PHP_FULL_OBJECTS_H
 #define PHP_FULL_OBJECTS_H
 
@@ -29,6 +31,7 @@ extern zend_module_entry full_objects_module_entry;
 
 ZEND_BEGIN_MODULE_GLOBALS(full_objects)
     zend_array *oop_handlers;
+    zend_bool allow_override;
 ZEND_END_MODULE_GLOBALS(full_objects)
 
 #define FULL_OBJECTS_G(v) ZEND_MODULE_GLOBALS_ACCESSOR(full_objects, v)
