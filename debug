@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export TEST_PHP_ARGS="-q"
+./CLEAN
+make clean
+phpize --clean
+phpize && ./configure && make CFLAGS="-g" && make test && php ci
