@@ -14,9 +14,11 @@
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
+#include "ext/standard/php_var.h"
 
 #include "php_full_objects.h"
 #include "register.h"
+#include "handlers/object.h"
 
 ZEND_DECLARE_MODULE_GLOBALS(full_objects)
 
@@ -29,6 +31,24 @@ PHP_INI_BEGIN()
     STD_PHP_INI_BOOLEAN("full_objects.allow_override", "0", PHP_INI_ALL, OnUpdateBool, allow_override, zend_full_objects_globals, full_objects_globals)
 PHP_INI_END()
 /* }}} */
+
+static int full_objects_method_call_handler(zend_execute_data *execute_data)
+{
+    const zend_op *opline = execute_data->opline;
+    zend_free_op free_op1, free_op2;
+    zval *obj = NULL, *method = NULL;
+    zend_class_entry *ce = NULL;
+    zend_function *fbc = NULL;
+
+    obj = zend_get_zval_ptr(opline->op1_type, &opline->op1, execute_data, &free_op1, BP_VAR_R);
+    method = zend_get_zval_ptr(opline->op2_type, &opline->op2, execute_data, &free_op2, BP_VAR_R);
+
+    php_var_dump(obj, 2);
+    php_var_dump(method, 2);
+
+    return ZEND_USER_OPCODE_DISPATCH;
+    /* return ZEND_USER_OPCODE_CONTINUE; */
+}
 
 ZEND_BEGIN_ARG_INFO_EX(register_handler_arginfo, 0, 0, 2)
     ZEND_ARG_INFO(0, "type")
@@ -81,6 +101,8 @@ PHP_GSHUTDOWN_FUNCTION(full_objects) {
 PHP_MINIT_FUNCTION(full_objects)
 {
     REGISTER_INI_ENTRIES();
+    FULLOBJECTS_MODULE_STARTUP(handler_object);
+    /* zend_set_user_opcode_handler(ZEND_INIT_METHOD_CALL, full_objects_method_call_handler); */
     return SUCCESS;
 }
 /* }}} */

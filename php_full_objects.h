@@ -25,6 +25,9 @@ extern zend_module_entry full_objects_module_entry;
 #	define PHP_FULL_OBJECTS_API
 #endif
 
+#define FULLOBJECTS_MODULE_STARTUP(module) ZEND_MODULE_STARTUP_N(full_objects_##module)(INIT_FUNC_ARGS_PASSTHRU)
+#define FULLOBJECTS_MODULE_STARTUP_FUNCTION(module) ZEND_MINIT_FUNCTION(full_objects_##module)
+
 #ifdef ZTS
 #include "TSRM.h"
 #endif
