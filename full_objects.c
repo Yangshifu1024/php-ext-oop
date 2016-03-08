@@ -24,7 +24,7 @@ static int le_full_objects;
 /* {{{ PHP_INI
  */
 PHP_INI_BEGIN()
-    STD_PHP_INI_ENTRY("full_objects.allow_override",      "0", PHP_INI_ALL, OnUpdateBool, allow_override, zend_full_objects_globals, full_objects_globals)
+    STD_PHP_INI_BOOLEAN("full_objects.allow_override", "0", PHP_INI_ALL, OnUpdateBool, allow_override, zend_full_objects_globals, full_objects_globals)
 PHP_INI_END()
 /* }}} */
 
@@ -34,7 +34,7 @@ ZEND_BEGIN_ARG_INFO_EX(register_handler_arginfo, 0, 0, 2)
 ZEND_END_ARG_INFO()
 
 
-/* {{{ proto void register_full_objects_handler(string $arg, class $ce)
+/* {{{ proto string|null register_full_objects_handler(string $arg, class $ce)
    Register a handler for basic type */
 PHP_FUNCTION(register_full_objects_handler)
 {
