@@ -35,82 +35,82 @@ PHP_INI_END()
 /* }}} */
 
 typedef struct _indirection_function {
-	zend_internal_function fn;
-	zend_function *fbc;        /* Handler that needs to be invoked */
-	zval obj;
+    zend_internal_function fn;
+    zend_function *fbc;        /* Handler that needs to be invoked */
+    zval obj;
 } indirection_function;
 
 static void full_objects_indirection_func(INTERNAL_FUNCTION_PARAMETERS)
 {
-	indirection_function *ind = (indirection_function *) execute_data->func;
-	zval *obj = &ind->obj;
-	zval *params = safe_emalloc(sizeof(zval), ZEND_NUM_ARGS() + 1, 0);
-	zval result;
+    indirection_function *ind = (indirection_function *) execute_data->func;
+    zval *obj = &ind->obj;
+    zval *params = safe_emalloc(sizeof(zval), ZEND_NUM_ARGS() + 1, 0);
+    zval result;
 
-	zend_class_entry *ce = ind->fn.scope;
-	zend_fcall_info fci;
-	zend_fcall_info_cache fcc;
+    zend_class_entry *ce = ind->fn.scope;
+    zend_fcall_info fci;
+    zend_fcall_info_cache fcc;
 
-	fci.size = sizeof(fci);
+    fci.size = sizeof(fci);
 #ifndef ZEND_ENGINE_3_1
-	fci.symbol_table = NULL;
+    fci.symbol_table = NULL;
 #endif
-	fci.param_count = ZEND_NUM_ARGS() + 1;
-	fci.params = params;
-	fci.no_separation = 1;
+    fci.param_count = ZEND_NUM_ARGS() + 1;
+    fci.params = params;
+    fci.no_separation = 1;
 
-	fcc.initialized = 1;
-	fcc.calling_scope = ce;
-	fcc.function_handler = ind->fbc;
+    fcc.initialized = 1;
+    fcc.calling_scope = ce;
+    fcc.function_handler = ind->fbc;
 
-	zend_get_parameters_array_ex(ZEND_NUM_ARGS(), &params[1]);
+    zend_get_parameters_array_ex(ZEND_NUM_ARGS(), &params[1]);
 
-	ZVAL_COPY_VALUE(&params[0], obj);
-	ZVAL_STR(&fci.function_name, ind->fn.function_name);
-	fci.retval = &result;
-	fci.object = NULL;
+    ZVAL_COPY_VALUE(&params[0], obj);
+    ZVAL_STR(&fci.function_name, ind->fn.function_name);
+    fci.retval = &result;
+    fci.object = NULL;
 
-	fcc.object = NULL;
-	fcc.called_scope = EX(called_scope) && instanceof_function(EX(called_scope), ce TSRMLS_CC)
-		? EX(called_scope) : ce;
+    fcc.object = NULL;
+    fcc.called_scope = EX(called_scope) && instanceof_function(EX(called_scope), ce TSRMLS_CC)
+        ? EX(called_scope) : ce;
 
-	if (zend_call_function(&fci, &fcc TSRMLS_CC) == SUCCESS && !Z_ISUNDEF(result)) {
-		ZVAL_COPY_VALUE(return_value, &result);
-	}
-	zval_ptr_dtor(obj);
-	execute_data->func = NULL;
+    if (zend_call_function(&fci, &fcc TSRMLS_CC) == SUCCESS && !Z_ISUNDEF(result)) {
+        ZVAL_COPY_VALUE(return_value, &result);
+    }
+    zval_ptr_dtor(obj);
+    execute_data->func = NULL;
 
-	zval_ptr_dtor(&fci.function_name);
-	efree(params);
-	efree(ind);
+    zval_ptr_dtor(&fci.function_name);
+    efree(params);
+    efree(ind);
 }
 
 static zend_function *full_objects_get_indirection_func(
-	zend_class_entry *ce, zend_function *fbc, zval *method, zval *obj
+    zend_class_entry *ce, zend_function *fbc, zval *method, zval *obj
 ) {
-	indirection_function *ind = emalloc(sizeof(indirection_function));
-	zend_function *fn = (zend_function *) &ind->fn;
-	long keep_flags = ZEND_ACC_RETURN_REFERENCE;
+    indirection_function *ind = emalloc(sizeof(indirection_function));
+    zend_function *fn = (zend_function *) &ind->fn;
+    long keep_flags = ZEND_ACC_RETURN_REFERENCE;
 
-	ind->fn.type = ZEND_INTERNAL_FUNCTION;
-	ind->fn.module = (ce->type == ZEND_INTERNAL_CLASS) ? ce->info.internal.module : NULL;
-	ind->fn.handler = full_objects_indirection_func;
-	ind->fn.scope = ce;
-	ind->fn.fn_flags = ZEND_ACC_CALL_VIA_HANDLER | (fbc->common.fn_flags & keep_flags);
-	ind->fn.num_args = fbc->common.num_args - 1;
+    ind->fn.type = ZEND_INTERNAL_FUNCTION;
+    ind->fn.module = (ce->type == ZEND_INTERNAL_CLASS) ? ce->info.internal.module : NULL;
+    ind->fn.handler = full_objects_indirection_func;
+    ind->fn.scope = ce;
+    ind->fn.fn_flags = ZEND_ACC_CALL_VIA_HANDLER | (fbc->common.fn_flags & keep_flags);
+    ind->fn.num_args = fbc->common.num_args - 1;
 
-	ind->fbc = fbc;
-	if (fbc->common.arg_info) {
-		fn->common.arg_info = &fbc->common.arg_info[1];
-	} else {
-		fn->common.arg_info = NULL;
-	}
+    ind->fbc = fbc;
+    if (fbc->common.arg_info) {
+        fn->common.arg_info = &fbc->common.arg_info[1];
+    } else {
+        fn->common.arg_info = NULL;
+    }
 
-	ind->fn.function_name = zend_string_copy(Z_STR_P(method));
-	zend_set_function_arg_flags(fn);
-	ZVAL_COPY_VALUE(&ind->obj, obj);
+    ind->fn.function_name = zend_string_copy(Z_STR_P(method));
+    zend_set_function_arg_flags(fn);
+    ZVAL_COPY_VALUE(&ind->obj, obj);
 
-	return fn;
+    return fn;
 }
 
 /** see http://lxr.php.net/xref/PHP_7_0/Zend/zend_vm_def.h#2892 */
