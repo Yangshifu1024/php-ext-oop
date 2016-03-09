@@ -48,9 +48,21 @@ PHP_METHOD(handler_string, toArray) {
 }
 /* }}} */
 
+/** {{{ proto public static FullObject\String::length() */
+PHP_METHOD(handler_string, length) {
+    zend_string *this = NULL;
+    ZEND_PARSE_PARAMETERS_START(1, 1)
+        Z_PARAM_STR(this)
+    ZEND_PARSE_PARAMETERS_END();
+    ZEND_ASSERT(this != NULL);
+    RETURN_LONG(ZSTR_LEN(this));
+}
+/* }}} */
+
 const zend_function_entry handler_string_ce_functions[] = {
-    PHP_ME(handler_string, toString, handler_string_toString_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
-    PHP_ME(handler_string, toArray, handler_string_toArray_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    PHP_ME(handler_string, toString, handler_string_unary_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    PHP_ME(handler_string, toArray, handler_string_unary_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    PHP_ME(handler_string, length, handler_string_unary_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_FE_END
 };
 
