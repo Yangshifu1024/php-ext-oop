@@ -8,7 +8,7 @@
 /* $Id$ */
 
 #include "php.h"
-
+#include "ext/standard/php_string.h"
 
 #include "php_full_objects.h"
 #include "object.h"
@@ -29,7 +29,22 @@ PHP_METHOD(handler_string, toString) {
 
 /** {{{ proto public static FullObject\String::toArray() */
 PHP_METHOD(handler_string, toArray) {
+    zend_string *this = NULL;
+    ZEND_PARSE_PARAMETERS_START(1, 1)
+        Z_PARAM_STR(this)
+    ZEND_PARSE_PARAMETERS_END();
+    ZEND_ASSERT(this != NULL);
+
     array_init(return_value);
+
+    if (ZSTR_VAL(this) != "") {
+        zend_long len = ZSTR_LEN(this);
+        char *p = ZSTR_VAL(this);
+        while (len-- > 0) {
+            add_next_index_stringl(return_value, p, 1);
+            p += 1;
+        }
+    }
 }
 /* }}} */
 
