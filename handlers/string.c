@@ -16,12 +16,16 @@
 
 zend_class_entry *handler_string_ce;
 
+#define HANDLER_STRING_INIT zend_string *this = NULL; \
+                            ZEND_PARSE_PARAMETERS_START(1, 1) \
+                                Z_PARAM_STR(this) \
+                            ZEND_PARSE_PARAMETERS_END();
+
+#define HANDLER_STRING_INIT_WITHOUT_PARSE zend_string *this = NULL;
+
 /** {{{ proto public static FullObject\String::toString() */
 PHP_METHOD(handler_string, toString) {
-    zend_string *this = NULL;
-    ZEND_PARSE_PARAMETERS_START(1, 1)
-        Z_PARAM_STR(this)
-    ZEND_PARSE_PARAMETERS_END();
+    HANDLER_STRING_INIT
     ZEND_ASSERT(this != NULL);
     RETURN_STR(this);
 }
@@ -29,10 +33,7 @@ PHP_METHOD(handler_string, toString) {
 
 /** {{{ proto public static FullObject\String::toArray() */
 PHP_METHOD(handler_string, toArray) {
-    zend_string *this = NULL;
-    ZEND_PARSE_PARAMETERS_START(1, 1)
-        Z_PARAM_STR(this)
-    ZEND_PARSE_PARAMETERS_END();
+    HANDLER_STRING_INIT
     ZEND_ASSERT(this != NULL);
 
     array_init(return_value);
@@ -50,10 +51,7 @@ PHP_METHOD(handler_string, toArray) {
 
 /** {{{ proto public static FullObject\String::length() */
 PHP_METHOD(handler_string, length) {
-    zend_string *this = NULL;
-    ZEND_PARSE_PARAMETERS_START(1, 1)
-        Z_PARAM_STR(this)
-    ZEND_PARSE_PARAMETERS_END();
+    HANDLER_STRING_INIT
     ZEND_ASSERT(this != NULL);
     RETURN_LONG(ZSTR_LEN(this));
 }
@@ -61,7 +59,7 @@ PHP_METHOD(handler_string, length) {
 
 /** {{{ proto public static FullObject\String::slice($offset, $length = null) */
 PHP_METHOD(handler_string, slice) {
-    zend_string *this = NULL;
+    HANDLER_STRING_INIT_WITHOUT_PARSE
     zend_long offset, length = -1;
     ZEND_PARSE_PARAMETERS_START(2, 3)
         Z_PARAM_STR(this)
