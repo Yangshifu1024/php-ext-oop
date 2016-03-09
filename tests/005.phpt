@@ -13,6 +13,9 @@ var_dump($string->slice(-2, 3));
 var_dump($string->slice(2));
 var_dump($string->slice(-6));
 var_dump($string->slice(7));
+var_dump($string->slice(-6)->length());
+var_dump($string->slice(-2, 3)->length());
+var_dump($string->slice(2, 3)->length());
 ?>
 --EXPECT--
 string(6) "string"
@@ -36,3 +39,7 @@ string(2) "ng"
 string(4) "ring"
 string(6) "string"
 bool(false)
+int(6)
+int(2)
+int(3)
+
