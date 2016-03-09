@@ -18,8 +18,12 @@ zend_class_entry *handler_string_ce;
 
 /** {{{ proto public static FullObject\String::toString() */
 PHP_METHOD(handler_string, toString) {
-    ZEND_ASSERT(getThis() != NULL);
-    RETURN_ZVAL(getThis(), 1, 0);
+    zend_string *this = NULL;
+    ZEND_PARSE_PARAMETERS_START(1, 1)
+        Z_PARAM_STR(this)
+    ZEND_PARSE_PARAMETERS_END();
+    ZEND_ASSERT(this != NULL);
+    RETURN_STR(this);
 }
 /* }}} */
 
