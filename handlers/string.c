@@ -59,10 +59,46 @@ PHP_METHOD(handler_string, length) {
 }
 /* }}} */
 
+/** {{{ proto public static FullObject\String::slice($offset, $length = null) */
+PHP_METHOD(handler_string, slice) {
+    zend_string *this = NULL;
+    zend_long offset, length = -1;
+    ZEND_PARSE_PARAMETERS_START(2, 3)
+        Z_PARAM_STR(this)
+        Z_PARAM_LONG(offset)
+        Z_PARAM_OPTIONAL
+        Z_PARAM_LONG(length)
+    ZEND_PARSE_PARAMETERS_END();
+    ZEND_ASSERT(this != NULL);
+
+    if (length == -1) {
+        length = ZSTR_LEN(this);
+    }
+
+    if (offset < 0) {
+        offset = ZSTR_LEN(this) + offset;
+        if (offset < 0) {
+            offset = 0;
+        }
+    }
+
+    if (offset > ZSTR_LEN(this)) {
+        RETURN_FALSE;
+    }
+
+    if ((offset + length) > ZSTR_LEN(this)) {
+        length = ZSTR_LEN(this) - offset;
+    }
+
+    RETURN_STRINGL(ZSTR_VAL(this) + offset, length);
+}
+/* }}} */
+
 const zend_function_entry handler_string_ce_functions[] = {
     PHP_ME(handler_string, toString, handler_string_unary_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_ME(handler_string, toArray, handler_string_unary_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_ME(handler_string, length, handler_string_unary_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
+    PHP_ME(handler_string, slice, handler_string_slice_arginfo, ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
     PHP_FE_END
 };
 

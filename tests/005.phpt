@@ -8,6 +8,11 @@ $string = "string";
 var_dump($string->toString());
 var_dump($string->toArray());
 var_dump($string->length());
+var_dump($string->slice(2, 3));
+var_dump($string->slice(-2, 3));
+var_dump($string->slice(2));
+var_dump($string->slice(-6));
+var_dump($string->slice(7));
 ?>
 --EXPECT--
 string(6) "string"
@@ -26,4 +31,8 @@ array(6) {
   string(1) "g"
 }
 int(6)
-
+string(3) "rin"
+string(2) "ng"
+string(4) "ring"
+string(6) "string"
+bool(false)
