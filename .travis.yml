@@ -3,5 +3,10 @@ language: php
 php:
   - 7.0
 
+notifications:
+  email:
+    recipients:
+      - codebear4@gmail.com
+
 script:
   - ./debug
