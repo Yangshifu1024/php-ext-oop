@@ -1,0 +1,36 @@
+#!/bin/env php
+
+<?php
+/**
+ * This file is used for collect results of `make test`
+ */
+
+$ite = new RecursiveDirectoryIterator(__DIR__);
+
+$filesIterator = new RecursiveIteratorIterator($ite);
+$diffs = [];
+
+foreach ($filesIterator as $file) {
+    // Some *.diff files will be show when tests were not all passed
+    if (!$file->isFile() || $file->getExtension() !== 'diff') {
+        continue;
+    }
+    $diffs[] = $file->getRealPath();
+}
+
+if (empty($diffs)) {
+    // If all tests passed, show message and return 0.
+    echo "All passed".PHP_EOL;
+    return;
+}
+
+foreach ($diffs as $diff) {
+    // If there is any failure tests, show the files' path and the contents for developer
+    $content = file_get_contents($diff);
+    echo "--- {$diff} begin ---".PHP_EOL;
+    echo $content.PHP_EOL;
+    echo "--- {$diff} end ---".PHP_EOL;
+}
+
+// Return 1 to sign it has error, just for CI use
+return 1;
