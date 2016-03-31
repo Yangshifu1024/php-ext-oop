@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export TEST_PHP_ARGS="-q --show-diff"
+export TEST_PHP_ARGS="-q"
 ./CLEAN
 make clean
 phpize --clean
