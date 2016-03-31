@@ -10,3 +10,4 @@ notifications:
 
 script:
   - ./debug
+  - php ci
