@@ -1,0 +1,13 @@
+{
+    "name": "frank/full-objects",
+    "require": {
+        "apigen/apigen": "^4.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank Yang",
+            "email": "codebear4@gmail.com"
+        }
+    ]
+}

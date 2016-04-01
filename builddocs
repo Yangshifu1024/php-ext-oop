@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./vendor/bin/apigen generate -s api -d doc --template-theme bootstrap --no-source-code
