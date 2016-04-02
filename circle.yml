@@ -1,0 +1,11 @@
+machine:
+  php:
+    version: 7.0.4
+  pre:
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 10
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20
+    
+test:
+  override:
+    - ./debug
+    - php ci
