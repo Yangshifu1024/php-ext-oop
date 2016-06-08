@@ -1,7 +1,7 @@
 --TEST--
 Check for object handler
 --SKIPIF--
-<?php if (!extension_loaded("full_objects")) print "skip"; ?>
+<?php include('skipif.inc'); ?>
 --FILE--
 <?php
 

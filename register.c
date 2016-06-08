@@ -13,7 +13,7 @@
 #include "ext/standard/info.h"
 #include "ext/standard/php_var.h"
 
-#include "php_full_objects.h"
+#include "php_oop.h"
 #include "register.h"
 
 zend_ulong get_type_by_string(const char *type);
@@ -22,16 +22,16 @@ void register_handler(zend_bool *ret, zend_string *type, zend_class_entry *ce)
 {
     zend_ulong origin_type = get_type_by_string(ZSTR_VAL(type));
 
-    if (FULL_OBJECTS_G(oop_handlers)[origin_type]) {
-        if (!FULL_OBJECTS_G(allow_override)) {
+    if (OOP_G(oop_handlers)[origin_type]) {
+        if (!OOP_G(allow_override)) {
             *ret = 0;
             php_error(E_ERROR, "Type %s has been registered, and it\'s not allow to override.", ZSTR_VAL(type));
         }
     }
 
-    FULL_OBJECTS_G(oop_handlers)[origin_type] = ce ;
+    OOP_G(oop_handlers)[origin_type] = ce ;
     if (origin_type == IS_TRUE) {
-        FULL_OBJECTS_G(oop_handlers)[IS_FALSE] = ce ;
+        OOP_G(oop_handlers)[IS_FALSE] = ce ;
     }
     *ret = 1;
 }

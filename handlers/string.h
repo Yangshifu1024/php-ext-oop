@@ -7,14 +7,14 @@
 
 /* $Id$ */
 
-#ifndef PHP_FULLOBJECTS_HANDLERS_STRING_H
-#define PHP_FULLOBJECTS_HANDLERS_STRING_H
+#ifndef PHP_OOP_HANDLERS_STRING_H
+#define PHP_OOP_HANDLERS_STRING_H
 
 #include "php.h"
 
 extern zend_class_entry *handler_string_ce;
 
-FULLOBJECTS_MODULE_STARTUP_FUNCTION(handler_string);
+OOP_MODULE_STARTUP_FUNCTION(handler_string);
 
 ZEND_BEGIN_ARG_INFO_EX(handler_string_unary_arginfo, 0, 0, 1)
     ZEND_ARG_TYPE_INFO(0, str, IS_STRING, 0)

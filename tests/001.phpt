@@ -1,21 +1,10 @@
 --TEST--
 Check for full_objects presence
 --SKIPIF--
-<?php if (!extension_loaded("full_objects")) print "skip"; ?>
+<?php include('skipif.inc'); ?>
 --FILE--
-<?php 
-echo "full_objects extension is available";
-/*
-	you can add regression tests for your extension here
-
-  the output of your test code has to be equal to the
-  text in the --EXPECT-- section below for the tests
-  to pass, differences between the output and the
-  expected text are interpreted as failure
-
-	see php7/README.TESTING for further information on
-  writing regression tests
-*/
+<?php
+echo "oop extension is available";
 ?>
 --EXPECT--
-full_objects extension is available
+oop extension is available

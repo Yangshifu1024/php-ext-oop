@@ -7,13 +7,13 @@
 
 /* $Id$ */
 
-#ifndef PHP_FULLOBJECTS_HANDLERS_OBJECT_H
-#define PHP_FULLOBJECTS_HANDLERS_OBJECT_H
+#ifndef PHP_OOP_HANDLERS_OBJECT_H
+#define PHP_OOP_HANDLERS_OBJECT_H
 
 #include "php.h"
 
 extern zend_class_entry *handler_object_ce;
 
-FULLOBJECTS_MODULE_STARTUP_FUNCTION(handler_object);
+OOP_MODULE_STARTUP_FUNCTION(handler_object);
 
 #endif

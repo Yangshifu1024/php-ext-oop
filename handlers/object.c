@@ -10,7 +10,7 @@
 #include "php.h"
 
 
-#include "php_full_objects.h"
+#include "php_oop.h"
 #include "object.h"
 
 zend_class_entry *handler_object_ce;
@@ -33,7 +33,7 @@ const zend_function_entry handler_object_ce_functions[] = {
     PHP_FE_END
 };
 
-FULLOBJECTS_MODULE_STARTUP_FUNCTION(handler_object)
+OOP_MODULE_STARTUP_FUNCTION(handler_object)
 {
     zend_class_entry local_handler_object_ce;
     INIT_CLASS_ENTRY(local_handler_object_ce, "FullObjects\\Object", handler_object_ce_functions);

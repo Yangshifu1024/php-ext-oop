@@ -1,12 +1,12 @@
 --TEST--
 Check for ini entry function
 --SKIPIF--
-<?php if (!extension_loaded("full_objects")) print "skip"; ?>
+<?php include('skipif.inc'); ?>
 --INI--
-full_objects.allow_override=yes
+oop.allow_override=yes
 --FILE--
 <?php
-var_dump(ini_get("full_objects.allow_override"));
+var_dump(ini_get("oop.allow_override"));
 ?>
 --EXPECT--
 string(1) "1"
