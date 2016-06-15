@@ -52,9 +52,6 @@ static void oop_indirection_func(INTERNAL_FUNCTION_PARAMETERS)
     zend_fcall_info_cache fcc;
 
     fci.size = sizeof(fci);
-#ifndef ZEND_ENGINE_3_1
-    fci.symbol_table = NULL;
-#endif
     fci.param_count = ZEND_NUM_ARGS() + 1;
     fci.params = params;
     fci.no_separation = 1;
@@ -71,8 +68,7 @@ static void oop_indirection_func(INTERNAL_FUNCTION_PARAMETERS)
     fci.object = NULL;
 
     fcc.object = NULL;
-    fcc.called_scope = EX(called_scope) && instanceof_function(EX(called_scope), ce TSRMLS_CC)
-        ? EX(called_scope) : ce;
+    fcc.called_scope = ce;
 
     if (zend_call_function(&fci, &fcc TSRMLS_CC) == SUCCESS && !Z_ISUNDEF(result)) {
         ZVAL_COPY_VALUE(return_value, &result);
