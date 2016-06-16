@@ -123,8 +123,6 @@ static int oop_method_call_handler(zend_execute_data *execute_data)
     method = zend_get_zval_ptr(opline->op2_type, &opline->op2, execute_data, &free_op2, BP_VAR_R);
 
     if (Z_TYPE_P(obj) == IS_STRING) {
-        /* php_var_dump(obj, 2); */
-        /* php_var_dump(method, 2); */
         ce = OOP_G(oop_handlers)[Z_TYPE_P(obj)];
 
         if (!ce) {

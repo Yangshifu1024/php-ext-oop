@@ -5,7 +5,7 @@ Check for object handler
 --FILE--
 <?php
 
-use FullObjects\Object;
+use OOP\Object;
 
 $obj = new Object;
 var_dump($obj->toString());

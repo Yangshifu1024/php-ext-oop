@@ -1,6 +1,6 @@
 <?php
 
-namespace FullObjects;
+namespace OOP;
 
 /**
  * Class: String

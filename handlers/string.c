@@ -103,7 +103,7 @@ const zend_function_entry handler_string_ce_functions[] = {
 OOP_MODULE_STARTUP_FUNCTION(handler_string)
 {
     zend_class_entry local_handler_string_ce;
-    INIT_CLASS_ENTRY(local_handler_string_ce, "FullObjects\\String", handler_string_ce_functions);
+    INIT_CLASS_ENTRY(local_handler_string_ce, "OOP\\String", handler_string_ce_functions);
     handler_string_ce = zend_register_internal_class_ex(&local_handler_string_ce, NULL);
 
     return SUCCESS;
