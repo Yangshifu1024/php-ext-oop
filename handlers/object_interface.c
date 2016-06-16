@@ -26,8 +26,7 @@ OOP_MODULE_STARTUP_FUNCTION(interface_object)
 {
     zend_class_entry local_interface_object_ce;
     INIT_CLASS_ENTRY(local_interface_object_ce, "OOP\\ObjectInterface", interface_object_functions);
-    interface_object_ce = zend_register_internal_class_ex(&local_interface_object_ce, NULL);
-    interface_object_ce->ce_flags |= ZEND_ACC_INTERFACE;
+    interface_object_ce = zend_register_internal_interface(&local_interface_object_ce);
     return SUCCESS;
 }
 
