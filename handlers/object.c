@@ -15,13 +15,13 @@
 
 zend_class_entry *handler_object_ce;
 
-/** {{{ proto public static FullObject\Object::toString() */
+/** {{{ proto public static OOP\Object::toString() */
 PHP_METHOD(handler_object, toString) {
     RETURN_EMPTY_STRING();
 }
 /* }}} */
 
-/** {{{ proto public static FullObject\Object::toArray() */
+/** {{{ proto public static OOP\Object::toArray() */
 PHP_METHOD(handler_object, toArray) {
     array_init(return_value);
 }
