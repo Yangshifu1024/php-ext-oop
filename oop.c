@@ -19,6 +19,7 @@
 
 #include "php_oop.h"
 #include "register.h"
+#include "handlers/object_interface.h"
 #include "handlers/object.h"
 #include "handlers/string.h"
 
@@ -199,8 +200,9 @@ PHP_GSHUTDOWN_FUNCTION(oop) {
 PHP_MINIT_FUNCTION(oop)
 {
     REGISTER_INI_ENTRIES();
-    OOP_MODULE_STARTUP(handler_object);
-    OOP_MODULE_STARTUP(handler_string);
+    OOP_MODULE_STARTUP_CALL(interface_object);
+    OOP_MODULE_STARTUP_CALL(handler_object);
+    OOP_MODULE_STARTUP_CALL(handler_string);
 
     zend_bool ret;
     zend_string *basic_type = zend_string_init(ZEND_STRL("string"), 0);

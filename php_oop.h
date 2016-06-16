@@ -25,7 +25,7 @@ extern zend_module_entry oop_module_entry;
 #	define PHP_OOP_API
 #endif
 
-#define OOP_MODULE_STARTUP(module) ZEND_MODULE_STARTUP_N(oop_##module)(INIT_FUNC_ARGS_PASSTHRU)
+#define OOP_MODULE_STARTUP_CALL(module) ZEND_MODULE_STARTUP_N(oop_##module)(INIT_FUNC_ARGS_PASSTHRU)
 #define OOP_MODULE_STARTUP_FUNCTION(module) ZEND_MINIT_FUNCTION(oop_##module)
 #define MAX_HANDLERS IS_REFERENCE
 

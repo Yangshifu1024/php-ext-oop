@@ -11,5 +11,6 @@ if test "$PHP_OOP" != "no"; then
     register.c \
     handlers/object.c \
     handlers/string.c \
+    handlers/object_interface.c \
     , $ext_shared,, -DZEND_ENABLE_STATIC_TSRMLS_CACHE=1)
 fi
